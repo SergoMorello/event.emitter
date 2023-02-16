@@ -1,10 +1,10 @@
 {
-  "name": "easy-event-emitter",
-  "version": "1.0.0",
+  "name": "easy-event-emitter-test",
+  "version": "1.0.4",
   "description": "Easy event emitter",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "repository": {
     "type": "git",

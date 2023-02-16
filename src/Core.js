@@ -1,4 +1,4 @@
-class EventEmitter {
+class Core {
 	static #events = {
 		__groups: {},
 		__global: {}
@@ -8,13 +8,13 @@ class EventEmitter {
 		this.events = {};
 
 		if (typeof name === 'boolean' && name === true) {
-			this.events = EventEmitter.#events.__global;
+			this.events = Core.#events.__global;
 		}else{
 			if (name) {
-				if (typeof EventEmitter.#events.__groups[name] === 'undefined') {
-					EventEmitter.#events.__groups[name] = {};
+				if (typeof Core.#events.__groups[name] === 'undefined') {
+					Core.#events.__groups[name] = {};
 				}
-				this.events = EventEmitter.#events.__groups[name];
+				this.events = Core.#events.__groups[name];
 			}
 		}
 	}
@@ -41,4 +41,4 @@ class EventEmitter {
 		this.events = {};
 	}
 }
-export default EventEmitter;
+export default Core;

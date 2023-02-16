@@ -1,10 +1,10 @@
-import EventEmitter from "./EventEmitter";
+import Core from "./Core";
 
-export default class extends EventEmitter {
+export default class EventEmitter extends Core {
 	static #instanse = null;
 
 	static #init() {
-		return this.#instanse = this.#instanse instanceof EventEmitter ? this.#instanse : new EventEmitter(true);
+		return this.#instanse = this.#instanse instanceof Core ? this.#instanse : new Core(true);
 	}
 
 	static emit(...args) {
