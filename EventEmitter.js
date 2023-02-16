@@ -6,28 +6,17 @@ class EventEmitter {
 
 	constructor(name) {
 		this.events = {};
-		
+
 		if (typeof name === 'boolean' && name === true) {
 			this.events = EventEmitter.#events.__global;
-		}
-		if (name) {
-			if (typeof EventEmitter.#events.__groups[name] === 'undefined') {
-				EventEmitter.#events.__groups[name] = {};
+		}else{
+			if (name) {
+				if (typeof EventEmitter.#events.__groups[name] === 'undefined') {
+					EventEmitter.#events.__groups[name] = {};
+				}
+				this.events = EventEmitter.#events.__groups[name];
 			}
-			this.events = name ? EventEmitter.#events.__groups[name] : {};
 		}
-	}
-
-	static emit(...args) {
-		return (new EventEmitter(true)).emit(...args);
-	}
-
-	static addListener(...args) {
-		return (new EventEmitter(true)).emit(...args);
-	}
-
-	static removeAllListeners(...args) {
-		return (new EventEmitter(true)).emit(...args);
 	}
 
 	emit(event, data) {

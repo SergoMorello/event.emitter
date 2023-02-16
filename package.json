@@ -1,8 +1,8 @@
 {
-  "name": "event-emitter",
+  "name": "easy-event-emitter",
   "version": "1.0.0",
   "description": "Easy event emitter",
-  "main": "EventEmitter.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
