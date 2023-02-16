@@ -1,0 +1,25 @@
+{
+  "name": "event-emitter",
+  "version": "1.0.0",
+  "description": "Easy event emitter",
+  "main": "EventEmitter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergoMorello/event.emitter.git"
+  },
+  "keywords": [
+    "js",
+    "EventEmitter",
+    "events",
+    "emit"
+  ],
+  "author": "Sergey Serov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SergoMorello/event.emitter/issues"
+  },
+  "homepage": "https://github.com/SergoMorello/event.emitter#readme"
+}
