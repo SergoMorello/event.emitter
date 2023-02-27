@@ -4,6 +4,10 @@ class Core {
 		__global: {}
 	}
 
+	/**
+	 * Event instanse
+	 * @param {String|Boolean|null} name Name event group
+	 */
 	constructor(name) {
 		this.events = {};
 
@@ -19,12 +23,24 @@ class Core {
 		}
 	}
 
+	/**
+	 * Event emitter
+	 * @param {String} event Event name
+	 * @param {any} data Any data
+	 * @returns {void}
+	 */
 	emit(event, data) {
 		if (!this.events[event])
 			return;
 		this.events[event].forEach(callback => callback(data));
 	}
 
+	/**
+	 * Add listener for event
+	 * @param {String} event Event name
+	 * @param {Function} callback Callback function
+	 * @returns {Object} {remove: Function}
+	 */
 	addListener(event, callback) {
 		if (!this.events[event])
 			this.events[event] = [];
@@ -37,6 +53,10 @@ class Core {
 		}
 	}
 
+	/**
+	 * Remove all listeners in current event instanse
+	 * @returns {void}
+	 */
 	removeAllListeners() {
 		this.events = {};
 	}
