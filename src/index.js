@@ -10,8 +10,8 @@ export default class EventEmitter extends Core {
 	 * @param {any} data Any data
 	 * @returns {void}
 	 */
-	static emit(...args) {
-		return this.#instance.emit(...args);
+	static emit(event, data) {
+		return this.#instance.emit(event, data);
 	}
 
 	/**
@@ -20,15 +20,15 @@ export default class EventEmitter extends Core {
 	 * @param {Function} callback Callback function
 	 * @returns {Object} {remove: Function}
 	 */
-	static addListener(...args) {
-		return this.#instance.addListener(...args);
+	static addListener(event, callback) {
+		return this.#instance.addListener(event, callback);
 	}
 
 	/**
 	 * Remove all listeners in current event instanse
 	 * @returns {void}
 	 */
-	static removeAllListeners(...args) {
-		return this.#instance.removeAllListeners(...args);
+	static removeAllListeners() {
+		return this.#instance.removeAllListeners();
 	}
 };
