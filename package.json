@@ -1,6 +1,6 @@
 {
   "name": "easy-event-emitter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Easy event emitter",
   "main": "src/index.js",
   "scripts": {
