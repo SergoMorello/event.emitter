@@ -1,4 +1,4 @@
-import EventEmitter from "../src";
+import EventEmitter from "../lib";
 
 test('Dynamic', () => {
 	const events = new EventEmitter();

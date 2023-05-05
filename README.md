@@ -3,40 +3,40 @@
 ##	Easy EventEmitter
 
 ### Install
-```
+```js
 npm i easy-event-emitter
 ```
 
 ### Create isolated emitter
-```
+```js
 import EventEmitter from "easy-event-emitter";
 
 const events = new EventEmitter();
 ```
 
 ### Global
-```
+```js
 const events = new EventEmitter(true);
 ```
 
 ### Methods
 
-```
+```js
 addListener(event name, callback); //return {remove()}
 ```
 
-```
+```js
 emit(event name, data); //return void
 ```
 
-```
+```js
 removeAllListeners(); //return void
 ```
 
 ### Examples
 
 #### Isolated
-```
+```js
 const events1 = new EventEmitter();
 const events2 = new EventEmitter();
 
@@ -62,7 +62,7 @@ events2.removeAllListeners(); //Remove all listeners in current instance
 ```
 
 #### Groups
-```
+```js
 const events1 = new EventEmitter('test_group');
 const events2 = new EventEmitter('test_group');
 
@@ -79,7 +79,7 @@ events2.emit('test', 'world');
 ```
 
 #### Global
-```
+```js
 const events = new EventEmitter(true);
 events.addListener('test', (val) => {
 	console.log(val); //"hello" replace "world"
