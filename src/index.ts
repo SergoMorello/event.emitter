@@ -1,5 +1,5 @@
 import Core from "./Core";
-import { Callback } from "./Types";
+import { Callback, Listener } from "./Types";
 
 /** Easy Event Emitter */
 export default class EventEmitter extends Core {
@@ -11,7 +11,7 @@ export default class EventEmitter extends Core {
 	 * @param {any} data Any data
 	 * @returns {void}
 	 */
-	public static emit(event: string, data: any) {
+	public static emit(event: string, data: any): void {
 		return this.instance.emit(event, data);
 	}
 
@@ -19,9 +19,9 @@ export default class EventEmitter extends Core {
 	 * Add listener for event
 	 * @param {string} event Event name
 	 * @param {Function} callback Callback function
-	 * @returns {Object} {remove: Function}
+	 * @returns {Listener} {remove: Function}
 	 */
-	public static addListener(event: string, callback: Callback) {
+	public static addListener(event: string, callback: Callback): Listener {
 		return this.instance.addListener(event, callback);
 	}
 
@@ -29,7 +29,7 @@ export default class EventEmitter extends Core {
 	 * Remove all listeners in current event instanse
 	 * @returns {void}
 	 */
-	public static removeAllListeners() {
+	public static removeAllListeners(): void {
 		return this.instance.removeAllListeners();
 	}
 };

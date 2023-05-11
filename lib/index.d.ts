@@ -1,5 +1,5 @@
 import Core from "./Core";
-import { Callback } from "./Types";
+import { Callback, Listener } from "./Types";
 /** Easy Event Emitter */
 export default class EventEmitter extends Core {
     private static instance;
@@ -14,9 +14,9 @@ export default class EventEmitter extends Core {
      * Add listener for event
      * @param {string} event Event name
      * @param {Function} callback Callback function
-     * @returns {Object} {remove: Function}
+     * @returns {Listener} {remove: Function}
      */
-    static addListener(event: string, callback: Callback): import("./Types").Listener;
+    static addListener(event: string, callback: Callback): Listener;
     /**
      * Remove all listeners in current event instanse
      * @returns {void}

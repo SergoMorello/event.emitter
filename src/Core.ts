@@ -17,7 +17,7 @@ class Core {
 	 * Event instanse
 	 * @param {string|boolean|undefined} name Name event group
 	 */
-	constructor(name: string | boolean | undefined) {
+	constructor(name?: string | boolean | undefined) {
 		this.events = {};
 
 		if (typeof name === 'boolean' && name === true) {
@@ -38,7 +38,7 @@ class Core {
 	 * @param {any} data Any data
 	 * @returns {void}
 	 */
-	public emit(event: string, data: any) {
+	public emit(event: string, data: any): void {
 		if (!this.events[event])
 			return;
 		Object(this.events[event]).forEach((callback: Function) => callback(data));
@@ -50,7 +50,7 @@ class Core {
 	 * @param {function} callback Callback function
 	 * @returns {Listener} {remove: Function}
 	 */
-	public addListener(event: string, callback: Callback) {
+	public addListener(event: string, callback: Callback): Listener {
 		if (!(event in this.events))
 			this.events[event] = [];
 
@@ -66,7 +66,7 @@ class Core {
 	 * Remove all listeners in current event instanse
 	 * @returns {void}
 	 */
-	public removeAllListeners() {
+	public removeAllListeners(): void {
 		this.events = {};
 	}
 }
