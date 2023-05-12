@@ -1,8 +1,8 @@
-import Core from "./Core";
-import { Callback, Listener } from "./Types";
+import Events from "./Events";
+import Event from "./Event";
 
 /** Easy Event Emitter */
-export default class EventEmitter extends Core {
+export default class EventEmitter extends Events {
 	private static instance = new EventEmitter(true);
 
 	/**
@@ -19,9 +19,9 @@ export default class EventEmitter extends Core {
 	 * Add listener for event
 	 * @param {string} event Event name
 	 * @param {Function} callback Callback function
-	 * @returns {Listener} {remove: Function}
+	 * @returns {Event} {remove: Function, emit: Function}
 	 */
-	public static addListener(event: string, callback: Callback): Listener {
+	public static addListener(event: string, callback: Function): Event {
 		return this.instance.addListener(event, callback);
 	}
 

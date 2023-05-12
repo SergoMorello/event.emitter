@@ -1,22 +1,15 @@
-export interface Events {
-    [index: string | number]: any;
-}
-export interface EventsContainer {
-    __groups: Events;
-    __global: Events;
-}
-export interface Callback {
-    /**
-     * Callback event
-     * @param {string} data Data return of emit
-     * @returns {void}
-     */
-    (data: string): void;
-}
-export interface Listener {
-    /**
-     * Function remove current listener
-     * @returns {void}
-     */
+export type EventObject = {
+    [index: string]: Array<Event>;
+};
+export type EventsObject = {
+    [index: string]: EventObject;
+};
+export interface Event {
+    emit(data: any): void;
     remove(): void;
+}
+export interface Events {
+    emit(event: string, data: any): void;
+    addListener(event: string, callback: Function): Event;
+    removeAllListeners(): void;
 }
