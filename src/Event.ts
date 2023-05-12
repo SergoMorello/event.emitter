@@ -46,7 +46,7 @@ export default class Event implements EventInt {
 
 	/**
 	 * Remove current listener
-	 * @returns {any}
+	 * @returns {void}
 	 */
 	public remove(): void {
 		this.events[this.name].splice(this.index, 1);
