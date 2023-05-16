@@ -26,7 +26,7 @@ export default class Event implements EventInt {
     emit(data: any): void;
     /**
      * Remove current listener
-     * @returns {any}
+     * @returns {void}
      */
     remove(): void;
 }
