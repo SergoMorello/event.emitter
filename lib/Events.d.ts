@@ -1,4 +1,4 @@
-import { Events as EventsInt } from "./Types";
+import { EventCallback, Events as EventsInt } from "./Types";
 import Event from "./Event";
 /** Events class */
 export default class Events implements EventsInt {
@@ -14,17 +14,17 @@ export default class Events implements EventsInt {
     /**
      * Event emitter
      * @param {string} event Event name
-     * @param {any} data Any data
+     * @param {T} data Any data
      * @returns {void}
      */
-    emit(event: string, data: any): void;
+    emit<T>(event: string, data: T): void;
     /**
      * Add listener for event
      * @param {string} event Event name
-     * @param {Function} callback Callback function
+     * @param {EventCallback} callback Callback function
      * @returns {Event} {remove: Function, emit: Function}
      */
-    addListener(event: string, callback: Function): Event;
+    addListener<T>(event: string, callback: EventCallback<T>): Event<T>;
     /**
      * Remove all listeners in current event instanse
      * @returns {void}

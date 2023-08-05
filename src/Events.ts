@@ -1,6 +1,7 @@
 import { 
 	EventsObject,
 	EventObject,
+	EventCallback,
 	Events as EventsInt
 } from "./Types";
 import Event from "./Event";
@@ -12,7 +13,7 @@ export default class Events implements EventsInt {
 		[Events.globalName]: <EventObject>{}
 	};
 
-	private listeners: Array<Event>;
+	private listeners: Array<Event<any>>;
 
 	private events: EventObject;
 
@@ -23,6 +24,10 @@ export default class Events implements EventsInt {
 	constructor(group?: string | boolean | undefined) {
 		this.listeners = [];
 		this.events = {};
+
+		this.emit = this.emit.bind(this);
+		this.addListener = this.addListener.bind(this);
+		this.removeAllListeners = this.removeAllListeners.bind(this);
 
 		if (typeof group === 'boolean' && group === true) {
 			this.events = Events.events[Events.globalName];
@@ -39,10 +44,10 @@ export default class Events implements EventsInt {
 	/**
 	 * Event emitter
 	 * @param {string} event Event name
-	 * @param {any} data Any data
+	 * @param {T} data Any data
 	 * @returns {void}
 	 */
-	public emit(event: string, data: any): void {
+	public emit<T>(event: string, data: T): void {
 		if (!this.events[event]) {
 			return;
 		}
@@ -54,10 +59,10 @@ export default class Events implements EventsInt {
 	/**
 	 * Add listener for event
 	 * @param {string} event Event name
-	 * @param {Function} callback Callback function
+	 * @param {EventCallback} callback Callback function
 	 * @returns {Event} {remove: Function, emit: Function}
 	 */
-	public addListener(event: string, callback: Function): Event {
+	public addListener<T>(event: string, callback: EventCallback<T>): Event<T> {
 		const newListener = new Event(event, callback, this.events);
 		this.listeners.push(newListener);
 		return newListener;

@@ -6,13 +6,15 @@ export type EventsObject = {
 	[index: string]: EventObject;
 }
 
+export type EventCallback<T> = (data: T) => void;
+
 export interface Event {
 	emit(data: any): void;
 	remove(): void;
 }
 
 export interface Events {
-	emit(event: string, data: any): void;
-	addListener(event: string, callback: Function): Event;
+	emit<T>(event: string, data: T): void;
+	addListener<T>(event: string, callback: EventCallback<T>): Event;
 	removeAllListeners(): void;
 }

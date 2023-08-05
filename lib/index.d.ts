@@ -1,6 +1,5 @@
 import Events from "./Events";
-import Event from "./Event";
-export { Events, Event, EventsObject, EventObject } from "./Types";
+export { Events, Event, EventsObject, EventObject, EventCallback } from "./Types";
 /** Easy Event Emitter */
 export default class EventEmitter extends Events {
     private static instance;
@@ -10,17 +9,17 @@ export default class EventEmitter extends Events {
      * @param {any} data Any data
      * @returns {void}
      */
-    static emit(event: string, data: any): void;
+    static emit: <T>(event: string, data: T) => void;
     /**
      * Add listener for event
      * @param {string} event Event name
-     * @param {Function} callback Callback function
+     * @param {EventCallback} callback Callback function
      * @returns {Event} {remove: Function, emit: Function}
      */
-    static addListener(event: string, callback: Function): Event;
+    static addListener: <T>(event: string, callback: import("./Types").EventCallback<T>) => import("./Event").default<T>;
     /**
      * Remove all listeners in current event instanse
      * @returns {void}
      */
-    static removeAllListeners(): void;
+    static removeAllListeners: () => void;
 }

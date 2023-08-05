@@ -1,29 +1,27 @@
-import { Event as EventInt, EventObject } from "./Types";
+import { Event as EventInt, EventObject, EventCallback } from "./Types";
 /** Event class */
-export default class Event implements EventInt {
+export default class Event<T> implements EventInt {
     private events;
-    private name;
+    private _name;
     private callback;
-    private index;
     /**
      * Constructor new event
      * @param {string} event Event name
-     * @param {Function} callback Callback function
+     * @param {EventCallback} callback Callback function
      * @param {EventObject} events Static events parent
      */
-    constructor(event: string, callback: Function, events: EventObject);
+    constructor(event: string, callback: EventCallback<T>, events: EventObject);
     /**
-     * Create instanse index
-     * @param {string} event Event name
-     * @returns {number} new index
+     * Event name
+     * @returns {string}
      */
-    private createIndex;
+    get name(): string;
     /**
      * Emit current listener
-     * @param {any} data Data for event
+     * @param {T} data Data for event
      * @returns {void}
      */
-    emit(data: any): void;
+    emit(data: T): void;
     /**
      * Remove current listener
      * @returns {void}

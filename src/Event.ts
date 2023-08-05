@@ -1,46 +1,45 @@
 import { 
 	Event as EventInt,
-	EventObject
+	EventObject,
+	EventCallback
 } from "./Types";
 
 /** Event class */
-export default class Event implements EventInt {
+export default class Event<T> implements EventInt {
 	private events: EventObject;
-	private name: string;
-	private callback: Function;
-	private index: number;
+	private _name: string;
+	private callback: EventCallback<T>;
 
 	/**
 	 * Constructor new event
 	 * @param {string} event Event name
-	 * @param {Function} callback Callback function
+	 * @param {EventCallback} callback Callback function
 	 * @param {EventObject} events Static events parent
 	 */
-	constructor(event: string, callback: Function, events: EventObject) {
+	constructor(event: string, callback: EventCallback<T>, events: EventObject) {
 		this.events = events;
-		this.name = event;
+		this._name = event;
 		this.callback = callback;
-		this.index = this.createIndex(event);
-	}
-
-	/**
-	 * Create instanse index
-	 * @param {string} event Event name
-	 * @returns {number} new index
-	 */
-	private createIndex(event: string): number {
 		if (!this.events[event]) {
 			this.events[event] = [];
 		}
-		return this.events[event].push(this) - 1;
+		this.events[event].push(this);
+	}
+
+	/**
+	 * Event name
+	 * @returns {string}
+	 */
+	public get name(): string {
+		return this._name;
 	}
 
 	/**
 	 * Emit current listener
-	 * @param {any} data Data for event
+	 * @param {T} data Data for event
 	 * @returns {void}
 	 */
-	public emit(data: any): void {
+	public emit(data: T): void {
 		this.callback(data);
 	}
 
@@ -49,6 +48,8 @@ export default class Event implements EventInt {
 	 * @returns {void}
 	 */
 	public remove(): void {
-		this.events[this.name].splice(this.index, 1);
+		this.events[this.name] = this.events[this.name].filter((event) => event !== this);
+		this._name = '';
+		this.callback = () => {};
 	}
 }

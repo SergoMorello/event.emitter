@@ -12,6 +12,6 @@ test('Dynamic', () => {
 	events_test1.addListener('__test',(val) => {
 		expect(val).toBe(123456);
 	});
-	expect(events_test1.emit('__test',123456))
-	expect(events_test2.emit('__test',1234))
+	expect(events_test1.emit('__test',123456));
+	expect(events_test2.emit('__test',1234));
 });
