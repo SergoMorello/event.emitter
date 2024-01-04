@@ -1,6 +1,6 @@
 {
   "name": "easy-event-emitter",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Easy event emitter",
   "main": "dist/index.js",
   "types": "lib/index.d.ts",
