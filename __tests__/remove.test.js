@@ -1,4 +1,4 @@
-import EventEmitter from "../lib";
+import EventEmitter from "../dist";
 
 test('Remove', () => {
 	const events = new EventEmitter();
