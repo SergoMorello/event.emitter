@@ -1,5 +1,5 @@
 import Events from "./Events";
-export { Events, Event, EventsObject, EventObject, EventCallback } from "./Types";
+export type { Events, Event, EventsObject, EventObject, EventCallback } from "./Types";
 /** Easy Event Emitter */
 export default class EventEmitter extends Events {
     private static instance;

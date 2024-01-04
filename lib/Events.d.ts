@@ -1,4 +1,4 @@
-import { EventCallback, Events as EventsInt } from "./Types";
+import type { EventCallback, Events as EventsInt } from "./Types";
 import Event from "./Event";
 /** Events class */
 export default class Events implements EventsInt {

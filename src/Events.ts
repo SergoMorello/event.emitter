@@ -1,4 +1,4 @@
-import { 
+import type { 
 	EventsObject,
 	EventObject,
 	EventCallback,
@@ -13,7 +13,7 @@ export default class Events implements EventsInt {
 		[Events.globalName]: <EventObject>{}
 	};
 
-	private listeners: Array<Event<any>>;
+	private listeners: Event<any>[];
 
 	private events: EventObject;
 
@@ -48,9 +48,8 @@ export default class Events implements EventsInt {
 	 * @returns {void}
 	 */
 	public emit<T>(event: string, data: T): void {
-		if (!this.events[event]) {
-			return;
-		}
+		if (!this.events[event]) return;
+
 		this.events[event].forEach((event) => {
 			event.emit(data);
 		});

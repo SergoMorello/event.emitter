@@ -1,5 +1,5 @@
 import Events from "./Events";
-export {
+export type {
 	Events,
 	Event,
 	EventsObject,

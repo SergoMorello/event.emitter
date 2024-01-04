@@ -1,5 +1,5 @@
 export type EventObject = {
-	[index: string]: Array<Event>;
+	[index: string]: Event[];
 }
 
 export type EventsObject = {

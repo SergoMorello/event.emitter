@@ -5,7 +5,7 @@ module.exports = {
 	index: '/src/index.ts'
   },
   target: 'web',
-  mode: 'development', //production | development
+  mode: 'production', //production | development
   devtool: "source-map",
   module: {
     rules: [
