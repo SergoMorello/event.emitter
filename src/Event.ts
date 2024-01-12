@@ -48,7 +48,7 @@ export default class Event<T> implements EventInt {
 	 * @returns {void}
 	 */
 	public remove(): void {
-		if (!this.events[this.name]) return;
+		if (!this.events || !this.events[this.name]) return;
 		this.events[this.name] = this.events[this.name].filter((event) => event !== this);
 		this._name = '';
 		this.callback = () => {};
