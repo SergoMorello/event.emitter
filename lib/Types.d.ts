@@ -1,16 +1,26 @@
-export type EventObject = {
-    [index: string]: Event[];
+import type Events from "./Event";
+import type Event from "./Event";
+export type EventObject<T> = {
+    [E in keyof T]: Event<T, E, T[E]>[];
 };
-export type EventsObject = {
-    [index: string]: EventObject;
+export type EventsObject<T = any> = {
+    [index: string]: EventObject<T>;
 };
 export type EventCallback<T> = (data: T) => void;
-export interface Event {
-    emit(data: any): void;
-    remove(): void;
+export type EventHandlers<D> = {
+    callback?: EventCallback<D>;
+    emit: (() => void)[];
+    remove: (() => void)[];
+};
+export interface EventListener<T = any, E extends keyof T = keyof T, D extends T[E] = T[E]> extends Event<T, E, D> {
 }
-export interface Events {
-    emit<T>(event: string, data: T): void;
-    addListener<T>(event: string, callback: EventCallback<T>): Event;
-    removeAllListeners(): void;
-}
+export type EventListeners = EventListener[];
+export { 
+/**
+ * @deprecated This type is deprecated
+ */
+Events, 
+/**
+ * @deprecated This type is deprecated
+ */
+Event };

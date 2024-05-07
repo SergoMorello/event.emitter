@@ -1,53 +1,52 @@
 import type { 
 	EventsObject,
 	EventObject,
-	EventCallback,
-	Events as EventsInt
+	EventCallback
 } from "./Types";
 import Event from "./Event";
 
 /** Events class */
-export default class Events implements EventsInt {
+export default abstract class Events<T> {
 	private static globalName: string = '__global';
-	private static events: EventsObject = {
-		[Events.globalName]: <EventObject>{}
+	private static _events: EventsObject = {
+		[Events.globalName]: {}
 	};
 
-	private listeners: Event<any>[];
+	private listeners: Event<T>[];
 
-	private events: EventObject;
+	private events: EventObject<T>;
 
 	/**
 	 * Event constructor
 	 * @param {string|boolean|undefined} group Events group name
 	 */
-	constructor(group?: string | boolean | undefined) {
+	constructor(group?: string | boolean) {
 		this.listeners = [];
-		this.events = {};
+		this.events = {} as EventObject<T>;
 
 		this.emit = this.emit.bind(this);
 		this.addListener = this.addListener.bind(this);
 		this.removeAllListeners = this.removeAllListeners.bind(this);
 
 		if (typeof group === 'boolean' && group === true) {
-			this.events = Events.events[Events.globalName];
+			this.events = Events._events[Events.globalName];
 		}else{
 			if (typeof group === 'string' && group !== Events.globalName) {
-				if (!Events.events[group]) {
-					Events.events[group] = {};
+				if (!Events._events[group]) {
+					Events._events[group] = {};
 				}
-				this.events = Events.events[group];
+				this.events = Events._events[group];
 			}
 		}
 	}
 
 	/**
 	 * Event emitter
-	 * @param {string} event Event name
-	 * @param {T} data Any data
+	 * @param {EVENT} event Event name
+	 * @param {DATA} data Any data
 	 * @returns {void}
 	 */
-	public emit<T>(event: string, data: T): void {
+	public emit<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, data: DATA): void {
 		if (!this.events[event]) return;
 
 		this.events[event].forEach((event) => {
@@ -57,14 +56,24 @@ export default class Events implements EventsInt {
 
 	/**
 	 * Add listener for event
-	 * @param {string} event Event name
-	 * @param {EventCallback} callback Callback function
-	 * @returns {Event} {remove: Function, emit: Function}
+	 * @param {EVENT} event Event name
+	 * @param {DATA} callback Callback function
+	 * @returns {Event<T>} Event object
 	 */
-	public addListener<T>(event: string, callback: EventCallback<T>): Event<T> {
-		const newListener = new Event(event, callback, this.events);
-		this.listeners.push(newListener);
-		return newListener;
+	public addListener<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
+		return new Event<T, EVENT, DATA>(event, callback, this.events, this.listeners);
+	}
+
+	/**
+	 * Remove listener in current event instanse
+	 * @returns {void}
+	 */
+	public removeListener(handler: EventCallback<any>): void {
+		this.listeners.reverse().forEach((listener) => {
+			if (listener.hasHandler(handler)) {
+				listener.remove();
+			}
+		});
 	}
 
 	/**

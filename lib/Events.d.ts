@@ -1,30 +1,35 @@
-import type { EventCallback, Events as EventsInt } from "./Types";
+import type { EventCallback } from "./Types";
 import Event from "./Event";
 /** Events class */
-export default class Events implements EventsInt {
+export default abstract class Events<T> {
     private static globalName;
-    private static events;
+    private static _events;
     private listeners;
     private events;
     /**
      * Event constructor
      * @param {string|boolean|undefined} group Events group name
      */
-    constructor(group?: string | boolean | undefined);
+    constructor(group?: string | boolean);
     /**
      * Event emitter
-     * @param {string} event Event name
-     * @param {T} data Any data
+     * @param {EVENT} event Event name
+     * @param {DATA} data Any data
      * @returns {void}
      */
-    emit<T>(event: string, data: T): void;
+    emit<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, data: DATA): void;
     /**
      * Add listener for event
-     * @param {string} event Event name
-     * @param {EventCallback} callback Callback function
-     * @returns {Event} {remove: Function, emit: Function}
+     * @param {EVENT} event Event name
+     * @param {DATA} callback Callback function
+     * @returns {Event<T>} Event object
      */
-    addListener<T>(event: string, callback: EventCallback<T>): Event<T>;
+    addListener<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA>;
+    /**
+     * Remove listener in current event instanse
+     * @returns {void}
+     */
+    removeListener(handler: EventCallback<any>): void;
     /**
      * Remove all listeners in current event instanse
      * @returns {void}

@@ -12,7 +12,7 @@ test('Remove', () => {
 	});
 	
 	listener.remove();
-	expect(listener.name).toBe('');
+	expect(listener.name).toBeUndefined();
 	listener.emit('');
 
 	for(var i = 0; i < 10; i++) {
@@ -23,4 +23,16 @@ test('Remove', () => {
 		event.remove();
 	}
 	events.emit('__test2', '');
+
+});
+
+test('Remove handler', () => {
+	const events = new EventEmitter();
+
+	const test = (val) => {};
+
+	const listener = events.addListener('__test3', test);
+	expect(listener.name).toBe('__test3');
+	events.removeListener(test);
+	expect(listener.name).toBeUndefined();
 });

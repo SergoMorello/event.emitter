@@ -1,14 +1,17 @@
 import Events from "./Events";
 export type {
-	Events,
 	Event,
+	Events,
+	EventListener,
+	EventListeners,
 	EventsObject,
 	EventObject,
-	EventCallback
+	EventCallback,
+	EventHandlers
 } from "./Types";
 
 /** Easy Event Emitter */
-export default class EventEmitter extends Events {
+export default class EventEmitter<T = any> extends Events<T> {
 	private static instance = new EventEmitter(true);
 
 	/**
@@ -22,8 +25,8 @@ export default class EventEmitter extends Events {
 	/**
 	 * Add listener for event
 	 * @param {string} event Event name
-	 * @param {EventCallback} callback Callback function
-	 * @returns {Event} {remove: Function, emit: Function}
+	 * @param {EventCallback<any>} callback Callback function
+	 * @returns {Event<any>} Event object
 	 */
 	public static addListener = this.instance.addListener;
 

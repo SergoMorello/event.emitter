@@ -98,3 +98,54 @@ events.removeAllListeners(); //Remove all global listeners
 //Or
 EventEmitter.removeAllListeners();
 ```
+
+#### Typing
+
+```js
+type TUser = {
+	id: number;
+	name: string;
+	email: string;
+};
+
+type TEvents = {
+	login: TUser;
+	register: Omit<TUser, 'id'>
+};
+
+const events = new EventEmitter<TEvents>();
+```
+
+#### Use
+
+```js
+events.addListener('login', (user) => {
+	// user: {
+	// 	id: 1,
+	// 	name: 'user',
+	// 	email: 'user@gmail.com'
+	// }
+});
+
+//...
+
+events.addListener('register', (user) => {
+	// user: {
+	// 	name: 'new user',
+	// 	email: 'new_user@gmail.com'
+	// }
+});
+```
+
+```js
+events.emit('login', {
+	id: 1,
+	name: 'user',
+	email: 'user@gmail.com'
+});
+
+events.emit('register', {
+	name: 'new user',
+	email: 'new_user@gmail.com'
+});
+```

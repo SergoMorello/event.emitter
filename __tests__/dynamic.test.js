@@ -15,3 +15,16 @@ test('Dynamic', () => {
 	expect(events_test1.emit('__test',123456));
 	expect(events_test2.emit('__test',1234));
 });
+
+test('Has handler', () => {
+	const events = new EventEmitter();
+	const trueHandler = () => {
+
+	};
+	const falseHandler = () => {
+
+	};
+	const listener = events.addListener('__test2', trueHandler);
+	expect(listener.hasHandler(trueHandler)).toBe(true);
+	expect(listener.hasHandler(falseHandler)).toBe(false);
+});
