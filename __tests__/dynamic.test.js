@@ -1,4 +1,4 @@
-import EventEmitter from "../dist";
+import EventEmitter from "../src";
 
 test('Dynamic', () => {
 	const events = new EventEmitter();

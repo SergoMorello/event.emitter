@@ -1,4 +1,4 @@
-import EventEmitter from "../dist";
+import EventEmitter from "../src";
 
 test('Static', () => {
 	expect(EventEmitter.addListener('__test',(val) => {
