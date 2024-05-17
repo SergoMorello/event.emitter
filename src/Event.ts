@@ -12,7 +12,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	private handlers: EventHandlers<D>;
 
 	/**
-	 * Constructor new event
+	 * Constructor a new event
 	 * @param {E} event Event name
 	 * @param {EventCallback<D>} callback Callback function
 	 * @param {EventObject<T>} events Static events parent
@@ -26,16 +26,16 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 			emit: [],
 			remove: []
 		};
-		this.init();
+		this.pushListener(this);
 	}
 
-	private init() {
+	protected pushListener(object: Event) {
 		if (this._name && !this.events[this._name]) {
 			this.events[this._name] = [];
 		}
-		this.events[this._name].push(this as any);
+		this.events[this._name].push(object as any);
 
-		this.listeners.push(this as any);
+		this.listeners.push(object as any);
 	}
 
 	/**
@@ -47,7 +47,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	}
 
 	/**
-	 * Emit current listener
+	 * Emit the current listener
 	 * @param {D} data Data for event
 	 * @returns {void}
 	 */
@@ -68,7 +68,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	}
 
 	/**
-	 * Remove current listener
+	 * Remove the current listener
 	 * @returns {void}
 	 */
 	public remove(): void {
@@ -82,7 +82,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	}
 
 	/**
-	 * Listener when event emitted
+	 * Listener when the event is emitted
 	 * @param {Function} handlerEmit
 	 * @returns {void}
 	 */
@@ -91,7 +91,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	}
 
 	/**
-	 * Listener when event remove
+	 * Listener when the event is removed
 	 * @param {Function} handlerRemove
 	 * @returns {void}
 	 */

@@ -6,20 +6,20 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
     private _name?;
     private handlers;
     /**
-     * Constructor new event
+     * Constructor a new event
      * @param {E} event Event name
      * @param {EventCallback<D>} callback Callback function
      * @param {EventObject<T>} events Static events parent
      */
     constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[]);
-    private init;
+    protected pushListener(object: Event): void;
     /**
      * Event name
      * @returns {string | undefined}
      */
     get name(): string | undefined;
     /**
-     * Emit current listener
+     * Emit the current listener
      * @param {D} data Data for event
      * @returns {void}
      */
@@ -31,18 +31,18 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
      */
     hasHandler(handler: EventCallback<D>): boolean;
     /**
-     * Remove current listener
+     * Remove the current listener
      * @returns {void}
      */
     remove(): void;
     /**
-     * Listener when event emitted
+     * Listener when the event is emitted
      * @param {Function} handlerEmit
      * @returns {void}
      */
     onEmit(handlerEmit: () => void): void;
     /**
-     * Listener when event remove
+     * Listener when the event is removed
      * @param {Function} handlerRemove
      * @returns {void}
      */

@@ -1,4 +1,5 @@
 import Events from "./Events";
+import Stack from "./Stack";
 export type {
 	Event,
 	Events,
@@ -31,8 +32,20 @@ export default class EventEmitter<T = any> extends Events<T> {
 	public static addListener = this.instance.addListener;
 
 	/**
+	 * Remove listener in current event instanse
+	 * @returns {void}
+	 */
+	public static removeListener = this.instance.removeListener;
+
+	/**
 	 * Remove all listeners in current event instanse
 	 * @returns {void}
 	 */
 	public static removeAllListeners = this.instance.removeAllListeners;
+
+	/**
+	 * Class for create the stack events
+	 * @returns {Stack}
+	 */
+	public static Stack = Stack;
 };
