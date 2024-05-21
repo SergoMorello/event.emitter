@@ -1,6 +1,7 @@
 import type { EventObject, EventCallback } from "./Types";
 /** Event class */
 export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] = T[E]> {
+    private readonly isStack;
     private events;
     private listeners;
     private _name?;
@@ -11,7 +12,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
      * @param {EventCallback<D>} callback Callback function
      * @param {EventObject<T>} events Static events parent
      */
-    constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[]);
+    constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[], stackMode?: boolean);
     protected pushListener(object: Event): void;
     /**
      * Event name

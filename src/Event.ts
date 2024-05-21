@@ -6,6 +6,7 @@ import type {
 
 /** Event class */
 export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] = T[E]> {
+	private readonly isStack: boolean;
 	private events: EventObject<T>;
 	private listeners: Event<T>[];
 	private _name?: E;
@@ -17,7 +18,8 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 * @param {EventCallback<D>} callback Callback function
 	 * @param {EventObject<T>} events Static events parent
 	 */
-	constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[]) {
+	constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[], stackMode = false) {
+		this.isStack = stackMode;
 		this.events = events;
 		this.listeners = listeners;
 		this._name = event;
@@ -73,8 +75,12 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	public remove(): void {
 		if (!this || !this.events || !this._name || !this.events[this._name]) return;
-		this.events[this._name] = this.events[this._name].filter((event) => event !== this);
-		this.listeners = this.listeners.filter((listener) => listener !== this);
+		this.events[this._name] = this.events[this._name].filter((event) => (!this.isStack && event !== this));
+		this.listeners = this.listeners.filter((listener) => {
+			if (this.isStack && listener !== this) listener.remove();
+			if (!this.isStack && listener !== this) return true;
+		});
+		
 		this._name = undefined;
 		this.handlers.callback = undefined;
 

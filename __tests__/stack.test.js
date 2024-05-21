@@ -8,17 +8,29 @@ test('Stack create', () => {
 
 
 test('Stack remove', () => {
-	var result = '';
-	const listener = EventEmitter.addListener('__test', (val) => {
+	const result = [];
+	const listener1 = EventEmitter.addListener('__test', (val) => {
 		expect(val).toBe(123);
-		result = val;
+		result.push('A-' + val);
 	});
 
-	const stack = new EventEmitter.Stack([listener]);
+	const events = new EventEmitter();
+
+	const listener2 = events.addListener('__test2', (val) => {
+		expect(val).toBe(123);
+		result.push('B-' + val);
+	});
+
+	const stack = new EventEmitter.Stack([listener1, listener2]);
 	stack.emit(123);
 	stack.remove();
+	listener1.emit(321);
+	listener2.emit(321);
 	stack.emit(321);
-	expect(result).toBe(123);
+	expect(result).toEqual([
+		'A-123',
+		'B-123'
+	]);
 });
 
 test('Stack emit', () => {
