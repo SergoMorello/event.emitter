@@ -35,6 +35,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 		if (this._name && !this.events[this._name]) {
 			this.events[this._name] = [];
 		}
+		
 		this.events[this._name].push(object as any);
 
 		this.listeners.push(object as any);
@@ -75,14 +76,15 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	public remove(): void {
 		if (!this || !this.events || !this._name || !this.events[this._name]) return;
-		this.events[this._name] = this.events[this._name].filter((event) => (!this.isStack && event !== this));
+		this.events[this._name] = this.events[this._name].filter((event) => !this.isStack && event !== this);
 		this.listeners = this.listeners.filter((listener) => {
 			if (this.isStack && listener !== this) listener.remove();
-			if (!this.isStack && listener !== this) return true;
+			return !this.isStack && listener !== this;
 		});
-		
-		this._name = undefined;
-		this.handlers.callback = undefined;
+		if (!this.isStack) {
+			this._name = undefined;
+			this.handlers.callback = undefined;
+		}
 
 		this.handlers.remove.forEach((handler) => handler());
 	}
