@@ -6,10 +6,10 @@ import type {
 
 /** Event class */
 export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] = T[E]> {
-	private readonly isStack: boolean;
-	private events: EventObject<T>;
-	private listeners: Event<T>[];
-	private _name?: E;
+	public readonly isStack: boolean;
+	protected events: EventObject<T>;
+	protected listeners: Event<T>[];
+	protected _name?: E;
 	private handlers: EventHandlers<D>;
 
 	/**
@@ -28,17 +28,22 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 			emit: [],
 			remove: []
 		};
-		this.pushListener(this);
+		this.push(this);
 	}
 
-	protected pushListener(object: Event) {
+	/**
+	 * Push listener to the current event
+	 * @param {Event<T>} eventListener
+	 * @returns {void}
+	 */
+	protected push(eventListener: Event): void {
 		if (this._name && !this.events[this._name]) {
 			this.events[this._name] = [];
 		}
 		
-		this.events[this._name].push(object as any);
+		this.events[this._name].push(eventListener as any);
 
-		this.listeners.push(object as any);
+		this.listeners.push(eventListener as any);
 	}
 
 	/**
@@ -76,11 +81,9 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	public remove(): void {
 		if (!this || !this.events || !this._name || !this.events[this._name]) return;
-		this.events[this._name] = this.events[this._name].filter((event) => !this.isStack && event !== this);
-		this.listeners = this.listeners.filter((listener) => {
-			if (this.isStack && listener !== this) listener.remove();
-			return !this.isStack && listener !== this;
-		});
+		this.events[this._name] = this.events[this._name].filter((event) => event !== this);
+		this.listeners = this.listeners.filter((listener) => listener !== this);
+
 		if (!this.isStack) {
 			this._name = undefined;
 			this.handlers.callback = undefined;
