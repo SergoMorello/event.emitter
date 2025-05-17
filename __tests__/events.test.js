@@ -87,3 +87,43 @@ test('emit static groups', (done) => {
 		'ok-groups'
 	]);
 });
+
+test('event count', () => {
+	const events = new EventEmitter();
+
+	events.addListener('test1', () => {});
+	events.addListener('test1', () => {});
+	const event = events.addListener('test1', () => {});
+
+	expect(event.count()).toBe(3);
+
+	events.removeAllListeners();
+
+	expect(event.count()).toBe(0);
+});
+
+test('events count', () => {
+	const events = new EventEmitter();
+
+	events.addListener('test1', () => {});
+	events.addListener('test1', () => {});
+	events.addListener('test2', () => {});
+	events.addListener('test2', () => {});
+	events.addListener('test3', () => {});
+	const event = events.addListener('test1', () => {});
+
+	expect(events.listenerCount('test1')).toBe(3);
+	expect(events.listenerCount('test2')).toBe(2);
+	expect(events.listenerCount('test3')).toBe(1);
+	expect(events.listenerCount('test4')).toBe(0);
+	expect(events.listenerCount()).toBe(6);
+
+	events.removeAllListeners();
+
+	console.log(events.events);
+
+	expect(events.listenerCount('test1')).toBe(0);
+	expect(events.listenerCount('test2')).toBe(0);
+	expect(events.listenerCount('test3')).toBe(0);
+	expect(events.listenerCount()).toBe(0);
+});

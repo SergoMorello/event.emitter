@@ -12,9 +12,9 @@ export default abstract class Events<T> {
 		[Events.globalName]: {}
 	};
 
-	private listeners: Event<T>[];
+	public listeners: Event<T>[];
 
-	private events: EventObject<T>;
+	public events: EventObject<T>;
 
 	/**
 	 * Event constructor
@@ -48,10 +48,9 @@ export default abstract class Events<T> {
 	 */
 	public emit<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, data: DATA): void {
 		if (!this.events[event]) return;
-
-		this.events[event].forEach((event) => {
-			event.emit(data);
-		});
+		for (let i = 0; i < this.events[event].length; i++) {
+			this.events[event][i].emit(data);
+		}
 	}
 
 	/**
@@ -61,7 +60,20 @@ export default abstract class Events<T> {
 	 * @returns {Event<T>} Event object
 	 */
 	public addListener<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
-		return new Event<T, EVENT, DATA>(event, callback, this.events, this.listeners);
+		return new Event<T, EVENT, DATA>(event, callback, this);
+		// return new Event<T, EVENT, DATA>(event, callback, this.events, this.listeners);
+	}
+
+	public listenerCount<EVENT extends keyof T>(event?: EVENT) {
+		let count = 0;
+
+		if (event) {
+			count = this.events[event]?.length ?? 0;
+		}else{
+			count = this.listeners.length;
+		}
+		
+		return count;
 	}
 
 	/**
@@ -69,11 +81,11 @@ export default abstract class Events<T> {
 	 * @returns {void}
 	 */
 	public removeListener(handler: EventCallback<any>): void {
-		this.listeners.reverse().forEach((listener) => {
-			if (listener.hasHandler(handler)) {
-				listener.remove();
+		for (let i = 0; i < this.listeners.length; i++) {
+			if (this.listeners[i].hasHandler(handler)) {
+				this.listeners[i].remove();
 			}
-		});
+		}
 	}
 
 	/**
@@ -81,8 +93,8 @@ export default abstract class Events<T> {
 	 * @returns {void}
 	 */
 	public removeAllListeners(): void {
-		this.listeners.reverse().forEach((listener) => {
-			listener.remove();
-		});
+		for (let i = 0; i < this.listeners.length; i++) {
+			this.listeners[i].remove();
+		}
 	}
 }

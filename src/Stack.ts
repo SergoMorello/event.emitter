@@ -1,15 +1,17 @@
 import Event from "./Event";
-import { EventObject } from "./Types";
+import Events from "./index";
 
 class Stack<T = any> extends Event<T> {
 	constructor(listeners: Event<T>[] = []) {
-		const _listeners: Event<T>[] = [];
+		const stackEmitter = new Events<T>();
 
 		super('__stack' as keyof T, (data) => {
-			_listeners.forEach((listener) => listener !== this ? listener.emit(data) : null);
-		}, {} as EventObject<T>, _listeners, true);
-
-		listeners.forEach((listener) => this.push(listener));
+			stackEmitter.listeners.forEach((listener) => listener !== this ? listener.emit(data) : null);
+		}, stackEmitter, true);
+		
+		for (let i = 0; i < listeners.length; i++) {
+			this.push(listeners[i]);
+		}
 	}
 
 	/**
@@ -26,16 +28,16 @@ class Stack<T = any> extends Event<T> {
 	 * @returns {void}
 	 */
 	public remove(eventListener?: Event<T>): void {
-		if (!this || !this.events || !this._name || !this.events[this._name]) return;
+		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
 
-		this.events[this._name] = this.events[this._name].filter((event) => {
+		this.context.events[this._name] = this.context.events[this._name].filter((event) => {
 			if (eventListener) {
 				return event !== eventListener;
 			}
 			return event !== this;
 		});
 
-		this.listeners = this.listeners.filter((listener) => {
+		this.context.listeners = this.context.listeners.filter((listener) => {
 			if (eventListener) {
 				if (listener === eventListener) {
 					listener.remove();
@@ -57,7 +59,7 @@ class Stack<T = any> extends Event<T> {
 	 * @returns {number}
 	 */
 	public get length(): number {
-		return Number(this.listeners.length - 1);
+		return Number(this.context.listeners.length - 1);
 	}
 }
 

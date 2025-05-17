@@ -18,7 +18,7 @@ test('Remove', (done) => {
 	expect(listener.name).toBeUndefined();
 	listener.emit('not-ok');
 
-	for(var i = 0; i < 100; i++) {
+	for(let i = 0; i < 100; i++) {
 		const listener = events.addListener('__test2', (e) => {
 			expect(e).not.toBe('not-ok');
 		});
@@ -47,14 +47,14 @@ test('Remove all listeners', (done) => {
 
 	const result = [];
 	
-	for(var i = 0; i < 200; i++) {
+	for(let i = 0; i < 200; i++) {
 		events.addListener('__test-i-' + i, (e) => {
 			expect(e).toBe('ok-i-' + i);
 			result.push(i);
 		});
 	}
 
-	for(var i = 0; i < 200; i++) {
+	for(let i = 0; i < 200; i++) {
 		events.emit('__test-i-' + i, 'ok-i-' + i);
 		if (i === 99) events.removeAllListeners();
 	}

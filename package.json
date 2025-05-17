@@ -6,8 +6,13 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "webpack"
+    "build": "webpack",
+	"prepublishOnly": "npm run jest && npm run build"
   },
+  "files": [
+    "dist",
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SergoMorello/event.emitter.git"
