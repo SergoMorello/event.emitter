@@ -45,8 +45,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 		}
 		
 		this.context.events[this._name].push(eventListener as any);
-
-		this.context.listeners.push(eventListener as any);
+		this.context.listeners.set(this.handlers.callback!, eventListener as any);
 	}
 
 	/**
@@ -90,8 +89,9 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	public remove(): void {
 		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
 		this.context.events[this._name] = this.context.events[this._name].filter((event) => event !== this);
-		this.context.listeners = this.context.listeners.filter((listener) => listener !== this);
-
+		this.context.listeners.delete(this.handlers.callback!);
+		// this.context.listeners = this.context.listeners.filter((listener) => listener !== this);
+		
 		if (!this.isStack) {
 			this._name = undefined;
 			this.handlers.callback = undefined;

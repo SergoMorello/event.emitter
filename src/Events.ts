@@ -12,7 +12,7 @@ export default abstract class Events<T> {
 		[Events.globalName]: {}
 	};
 
-	public listeners: Event<T>[];
+	public listeners: Map<EventCallback<any>, Event<T>>;
 
 	public events: EventObject<T>;
 
@@ -21,7 +21,7 @@ export default abstract class Events<T> {
 	 * @param {string|boolean|undefined} group Events group name
 	 */
 	constructor(group?: string | boolean) {
-		this.listeners = [];
+		this.listeners = new Map();
 		this.events = {} as EventObject<T>;
 
 		this.emit = this.emit.bind(this);
@@ -61,7 +61,6 @@ export default abstract class Events<T> {
 	 */
 	public addListener<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
 		return new Event<T, EVENT, DATA>(event, callback, this);
-		// return new Event<T, EVENT, DATA>(event, callback, this.events, this.listeners);
 	}
 
 	public listenerCount<EVENT extends keyof T>(event?: EVENT) {
@@ -70,7 +69,7 @@ export default abstract class Events<T> {
 		if (event) {
 			count = this.events[event]?.length ?? 0;
 		}else{
-			count = this.listeners.length;
+			count = this.listeners.size;
 		}
 		
 		return count;
@@ -81,11 +80,12 @@ export default abstract class Events<T> {
 	 * @returns {void}
 	 */
 	public removeListener(handler: EventCallback<any>): void {
-		for (let i = 0; i < this.listeners.length; i++) {
-			if (this.listeners[i].hasHandler(handler)) {
-				this.listeners[i].remove();
-			}
-		}
+		this.listeners.get(handler)?.remove();
+		// for (let i = 0; i < this.listeners.length; i++) {
+		// 	if (this.listeners[i].hasHandler(handler)) {
+		// 		this.listeners[i].remove();
+		// 	}
+		// }
 	}
 
 	/**
@@ -93,8 +93,8 @@ export default abstract class Events<T> {
 	 * @returns {void}
 	 */
 	public removeAllListeners(): void {
-		for (let i = 0; i < this.listeners.length; i++) {
-			this.listeners[i].remove();
-		}
+		this.listeners.forEach((listener) => {
+			listener.remove();
+		});
 	}
 }

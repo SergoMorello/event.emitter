@@ -6,7 +6,7 @@ class Stack<T = any> extends Event<T> {
 		const stackEmitter = new Events<T>();
 
 		super('__stack' as keyof T, (data) => {
-			stackEmitter.listeners.forEach((listener) => listener !== this ? listener.emit(data) : null);
+			stackEmitter.listeners.forEach((listener) => listener.isStack ? listener.emit(data) : null);
 		}, stackEmitter, true);
 		
 		for (let i = 0; i < listeners.length; i++) {
@@ -37,18 +37,30 @@ class Stack<T = any> extends Event<T> {
 			return event !== this;
 		});
 
-		this.context.listeners = this.context.listeners.filter((listener) => {
+		// this.context.listeners = this.context.listeners.filter((listener) => {
+		// 	if (eventListener) {
+		// 		if (listener === eventListener) {
+		// 			listener.remove();
+		// 			return false;
+		// 		}else{
+		// 			return true;
+		// 		}
+		// 	}
+		// 	if (listener !== this) listener.remove();
+		// 	return listener !== this;
+		// });
+
+		for (const [listenerKey, listener] of this.context.listeners) {
 			if (eventListener) {
 				if (listener === eventListener) {
 					listener.remove();
-					return false;
-				}else{
-					return true;
+					// this.context.listeners.delete(listenerKey);
 				}
+			} else if (listener !== this) {
+				listener.remove();
+				// this.context.listeners.delete(listenerKey);
 			}
-			if (listener !== this) listener.remove();
-			return listener !== this;
-		});
+		}
 
 		if (eventListener) return;
 		super.remove();
@@ -59,7 +71,7 @@ class Stack<T = any> extends Event<T> {
 	 * @returns {number}
 	 */
 	public get length(): number {
-		return Number(this.context.listeners.length - 1);
+		return Number(this.context.listeners.size - 1);
 	}
 }
 

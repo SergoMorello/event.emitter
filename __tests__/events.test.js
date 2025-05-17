@@ -120,8 +120,6 @@ test('events count', () => {
 
 	events.removeAllListeners();
 
-	console.log(events.events);
-
 	expect(events.listenerCount('test1')).toBe(0);
 	expect(events.listenerCount('test2')).toBe(0);
 	expect(events.listenerCount('test3')).toBe(0);
