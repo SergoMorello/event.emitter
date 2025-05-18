@@ -12,7 +12,7 @@ export type {
 } from "./Types";
 
 /** Easy Event Emitter */
-export default class EventEmitter<T = any> extends Events<T> {
+export default class EventEmitter<T = any> extends Events<T> implements Events<T> {
 	private static instance = new EventEmitter(true);
 
 	/**

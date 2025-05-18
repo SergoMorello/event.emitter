@@ -8,9 +8,6 @@ import type {
 /** Event class */
 export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] = T[E]> {
 	public readonly isStack: boolean;
-	// private context: Events;
-	// protected events: EventObject<T>;
-	// protected listeners: Event<T>[];
 	protected _name?: E;
 	private handlers: EventHandlers<D>;
 
@@ -21,10 +18,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 * @param {EventObject<T>} events Static events parent
 	 */
 	constructor(event: E, callback: EventCallback<D>, protected context: Events<T>, stackMode = false) {
-	// constructor(event: E, callback: EventCallback<D>, events: EventObject<T>, listeners: Event<T>[], stackMode = false) {
 		this.isStack = stackMode;
-		// this.events = context.events;
-		// this.listeners = context.listeners;
 		this._name = event;
 		this.handlers = {
 			callback,
@@ -41,11 +35,22 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	protected push(eventListener: Event): void {
 		if (this._name && !this.context.events[this._name]) {
-			this.context.events[this._name] = [];
+			this.context.events[this._name] = new Map();
 		}
 		
-		this.context.events[this._name].push(eventListener as any);
-		this.context.listeners.set(eventListener.handlers.callback!, eventListener as any);
+		this.context.events[this._name].set(eventListener, eventListener as any);
+		if (this.context.listeners.has(eventListener.handlers.callback!)) {
+			this.context.listeners.get(eventListener.handlers.callback!)?.pushFork(eventListener);
+		}else{
+			this.context.listeners.set(eventListener.handlers.callback!, eventListener as any);
+		}
+	}
+
+	private pushFork(eventListener: Event) {
+		if (!this.handlers.forks) {
+			this.handlers.forks = [];
+		}
+		this.handlers.forks.push(eventListener);
 	}
 
 	/**
@@ -79,7 +84,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	}
 
 	public count() {
-		return this.context.events[this._name]?.length ?? 0;
+		return this.context.events[this._name]?.size ?? 0;
 	}
 
 	/**
@@ -88,9 +93,10 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	public remove(): void {
 		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
-		this.context.events[this._name] = this.context.events[this._name].filter((event) => event !== this);
+		this.context.events[this._name].delete(this);
+		const event = this.context.listeners.get(this.handlers.callback!);
+		event?.handlers.forks?.forEach((event) => event !== this ? event.remove() : null);
 		this.context.listeners.delete(this.handlers.callback!);
-		// this.context.listeners = this.context.listeners.filter((listener) => listener !== this);
 		
 		if (!this.isStack) {
 			this._name = undefined;

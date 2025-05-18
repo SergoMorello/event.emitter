@@ -34,8 +34,8 @@ test('Remove handler', () => {
 	const testHandler = (e) => {
 		expect(e).not.toBe('not-ok');
 	};
-
 	const listener = events.addListener('__test3', testHandler);
+	events.addListener('__test3', testHandler);
 	expect(listener.name).toBe('__test3');
 	events.removeListener(testHandler);
 	expect(listener.name).toBeUndefined();

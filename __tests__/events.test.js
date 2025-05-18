@@ -43,6 +43,7 @@ test('emit groups', (done) => {
 	};
 
 	const listener = events_1.addListener('__test', testHandler);
+	events_1.addListener('__test', testHandler);
 
 	events_3.addListener('__test', testHandler);
 
@@ -55,6 +56,7 @@ test('emit groups', (done) => {
 	listener.emit('ok-2');
 	events_3.emit('__test2', 'ok-3');
 	expect(result).toEqual([
+		'ok-1',
 		'ok-1',
 		'ok-2'
 	]);
@@ -104,7 +106,7 @@ test('event count', () => {
 
 test('events count', () => {
 	const events = new EventEmitter();
-
+	
 	events.addListener('test1', () => {});
 	events.addListener('test1', () => {});
 	events.addListener('test2', () => {});

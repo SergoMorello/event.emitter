@@ -2,7 +2,7 @@ import type Events from "./Event";
 import type Event from "./Event";
 
 export type EventObject<T> = {
-	[E in keyof T]: Event<T, E, T[E]>[];
+	[E in keyof T]: Map<Event, Event<T, E, T[E]>>;
 };
 
 export type EventsObject<T = any> = {
@@ -13,6 +13,7 @@ export type EventCallback<T> = (data: T) => void;
 
 export type EventHandlers<D> = {
 	callback?: EventCallback<D>;
+	forks?: Event[];
 	emit: (() => void)[];
 	remove: (() => void)[];
 };

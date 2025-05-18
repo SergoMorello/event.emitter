@@ -48,9 +48,7 @@ export default abstract class Events<T> {
 	 */
 	public emit<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, data: DATA): void {
 		if (!this.events[event]) return;
-		for (let i = 0; i < this.events[event].length; i++) {
-			this.events[event][i].emit(data);
-		}
+		this.events[event].forEach((event) => event.emit(data));
 	}
 
 	/**
@@ -67,7 +65,7 @@ export default abstract class Events<T> {
 		let count = 0;
 
 		if (event) {
-			count = this.events[event]?.length ?? 0;
+			count = this.events[event]?.size ?? 0;
 		}else{
 			count = this.listeners.size;
 		}
@@ -81,11 +79,6 @@ export default abstract class Events<T> {
 	 */
 	public removeListener(handler: EventCallback<any>): void {
 		this.listeners.get(handler)?.remove();
-		// for (let i = 0; i < this.listeners.length; i++) {
-		// 	if (this.listeners[i].hasHandler(handler)) {
-		// 		this.listeners[i].remove();
-		// 	}
-		// }
 	}
 
 	/**

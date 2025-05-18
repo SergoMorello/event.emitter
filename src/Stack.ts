@@ -29,27 +29,9 @@ class Stack<T = any> extends Event<T> {
 	public remove(eventListener?: Event<T>): void {
 		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
 
-		this.context.events[this._name] = this.context.events[this._name].filter((event) => {
-			if (eventListener) {
-				return event !== eventListener;
-			}
-			return event !== this;
-		});
+		this.context.events[this._name].delete(eventListener ?? this);
 
-		// this.context.listeners = this.context.listeners.filter((listener) => {
-		// 	if (eventListener) {
-		// 		if (listener === eventListener) {
-		// 			listener.remove();
-		// 			return false;
-		// 		}else{
-		// 			return true;
-		// 		}
-		// 	}
-		// 	if (listener !== this) listener.remove();
-		// 	return listener !== this;
-		// });
-
-		for (const [listenerKey, listener] of this.context.listeners) {
+		for (const [_, listener] of this.context.listeners) {
 			if (eventListener) {
 				if (listener === eventListener) {
 					listener.remove();
