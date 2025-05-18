@@ -4,9 +4,8 @@ import Events from "./index";
 class Stack<T = any> extends Event<T> {
 	constructor(listeners: Event<T>[] = []) {
 		const stackEmitter = new Events<T>();
-
 		super('__stack' as keyof T, (data) => {
-			stackEmitter.listeners.forEach((listener) => listener.isStack ? listener.emit(data) : null);
+			stackEmitter.listeners.forEach((listener) => !listener.isStack ? listener.emit(data) : null);
 		}, stackEmitter, true);
 		
 		for (let i = 0; i < listeners.length; i++) {
@@ -54,11 +53,9 @@ class Stack<T = any> extends Event<T> {
 			if (eventListener) {
 				if (listener === eventListener) {
 					listener.remove();
-					// this.context.listeners.delete(listenerKey);
 				}
 			} else if (listener !== this) {
 				listener.remove();
-				// this.context.listeners.delete(listenerKey);
 			}
 		}
 

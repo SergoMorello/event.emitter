@@ -45,7 +45,7 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 		}
 		
 		this.context.events[this._name].push(eventListener as any);
-		this.context.listeners.set(this.handlers.callback!, eventListener as any);
+		this.context.listeners.set(eventListener.handlers.callback!, eventListener as any);
 	}
 
 	/**
