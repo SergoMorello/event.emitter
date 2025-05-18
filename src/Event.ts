@@ -1,6 +1,5 @@
 import type Events from "./Events";
 import type {
-	EventObject,
 	EventCallback,
 	EventHandlers
 } from "./Types";
@@ -46,7 +45,12 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 		}
 	}
 
-	private pushFork(eventListener: Event) {
+	/**
+	 * Push fork listeners
+	 * @param {Event} eventListener
+	 * @returns {void}
+	 */
+	private pushFork(eventListener: Event): void {
 		if (!this.handlers.forks) {
 			this.handlers.forks = [];
 		}
@@ -83,7 +87,11 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 		return handler === this.handlers.callback;
 	}
 
-	public count() {
+	/**
+	 * Get count listeners in event
+	 * @returns {number}
+	 */
+	public count(): number {
 		return this.context.events[this._name]?.size ?? 0;
 	}
 
@@ -94,8 +102,13 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	public remove(): void {
 		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
 		this.context.events[this._name].delete(this);
+		if (this.context.events[this._name].size === 0) {
+			delete this.context.events[this._name];
+		}
 		const event = this.context.listeners.get(this.handlers.callback!);
-		event?.handlers.forks?.forEach((event) => event !== this ? event.remove() : null);
+		if (event && event.handlers.forks) {
+			event.handlers.forks.forEach((event) => event !== this ? event.remove() : null);
+		}
 		this.context.listeners.delete(this.handlers.callback!);
 		
 		if (!this.isStack) {
