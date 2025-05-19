@@ -4,25 +4,23 @@ import type {
 	EventCallback
 } from "./Types";
 import Event from "./Event";
+import Core from "./Core";
 
 /** Events class */
-export default abstract class Events<T> {
+export default abstract class Events<T> extends Core<T> {
 	private static globalName: string = '__global';
 	private static _events: EventsObject = {
 		[Events.globalName]: {}
 	};
 
-	public listeners: Map<EventCallback<any>, Event<T>>;
-
-	public events: EventObject<T>;
+	
 
 	/**
 	 * Event constructor
 	 * @param {string|boolean|undefined} group Events group name
 	 */
 	constructor(group?: string | boolean) {
-		this.listeners = new Map();
-		this.events = {} as EventObject<T>;
+		super();
 
 		this.emit = this.emit.bind(this);
 		this.addListener = this.addListener.bind(this);
