@@ -1,11 +1,12 @@
-const path = require('path');
+import type { Configuration } from 'webpack';
+import path from 'path';
 
-module.exports = {
+const config: Configuration = {
   entry: {
-	index: '/src/index.ts'
+	index: path.resolve(__dirname, 'src/index.ts')
   },
   target: 'web',
-  mode: 'production', //production | development
+  mode: 'production',
   devtool: "source-map",
   module: {
     rules: [
@@ -19,14 +20,17 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts'],
   },
-
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+	clean: true,
 	library: 'EventEmitter',
 	libraryTarget: 'umd',
-	auxiliaryComment: 'Easy Event Emitter'
+	auxiliaryComment: 'Easy Event Emitter',
+	globalObject: 'this'
   }
 };
+
+export default config;

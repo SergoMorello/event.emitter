@@ -3,7 +3,7 @@ import EventEmitter from "../src";
 test('Remove', (done) => {
 	const events = new EventEmitter();
 	
-	const testHandler = (e) => {
+	const testHandler = (e: string) => {
 		expect(e).toBe('ok');
 		done();
 	};
@@ -31,7 +31,7 @@ test('Remove', (done) => {
 test('Remove handler', () => {
 	const events = new EventEmitter();
 
-	const testHandler = (e) => {
+	const testHandler = (e: string) => {
 		expect(e).not.toBe('not-ok');
 	};
 	const listener = events.addListener('__test3', testHandler);

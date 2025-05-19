@@ -46,7 +46,7 @@ export default abstract class Events<T> {
 	 * @param {DATA} data Any data
 	 * @returns {void}
 	 */
-	public emit<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, data: DATA): void {
+	public emit<DATA extends T[EVENT], EVENT extends keyof T = keyof T>(event: EVENT, data: DATA): void {
 		if (!this.events[event]) return;
 		this.events[event].forEach((event) => event.emit(data));
 	}
@@ -57,7 +57,7 @@ export default abstract class Events<T> {
 	 * @param {DATA} callback Callback function
 	 * @returns {Event<T>} Event object
 	 */
-	public addListener<EVENT extends keyof T, DATA extends T[EVENT]>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
+	public addListener<DATA extends T[EVENT], EVENT extends keyof T = keyof T>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
 		return new Event<T, EVENT, DATA>(event, callback, this);
 	}
 

@@ -23,22 +23,27 @@ test('emit event', (done) => {
 });
 
 test('emit static', (done) => {
-	EventEmitter.addListener('__test-static', (e) => {
+	EventEmitter.addListener<string>('__test-static', (e: string) => {
 		expect(e).toBe('ok');
 		done();
 	});
 
-	EventEmitter.emit('__test-static', 'ok');
+	EventEmitter.emit<string>('__test-static', 'ok');
 });
 
 test('emit groups', (done) => {
-	const events_1 = new EventEmitter('group-1');
+	type Events = {
+		'__test': 'ok-1' | 'ok-2';
+		'__test2': string;
+	};
+
+	const events_1 = new EventEmitter<Events>('group-1');
 	const events_2 = new EventEmitter('group-1');
-	const events_3 = new EventEmitter('group-2');
+	const events_3 = new EventEmitter<Events>('group-2');
 
-	const result = [];
+	const result: string[] = [];
 
-	const testHandler = (e) => {
+	const testHandler = (e: string) => {
 		result.push(e);
 	};
 
@@ -65,9 +70,9 @@ test('emit groups', (done) => {
 test('emit static groups', (done) => {
 	const events = new EventEmitter(true);
 
-	const result = [];
+	const result: string[] = [];
 
-	const testHandler = (e) => {
+	const testHandler = (e: string) => {
 		result.push(e);
 	};
 

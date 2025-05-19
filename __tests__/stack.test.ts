@@ -18,7 +18,7 @@ test('Stack create', () => {
 
 
 test('Stack remove', () => {
-	const result = [];
+	const result: string[] = [];
 
 	const listener1 = EventEmitter.addListener('__test', (val) => {
 		expect(val).toBe(123);
@@ -55,7 +55,7 @@ test('Stack remove', () => {
 test('Stack emit', () => {
 	const events = new EventEmitter();
 
-	const result = [];
+	const result: string[] = [];
 
 	const listener1 = events.addListener('__test1', (val) => {
 		result.push('A-' + val);
@@ -81,7 +81,7 @@ test('Stack emit', () => {
 test('Stack events', () => {
 	const events = new EventEmitter();
 
-	const result = [];
+	const result: string[] = [];
 
 	const listener1 = events.addListener('__test1', (val) => {});
 
