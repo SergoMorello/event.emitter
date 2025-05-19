@@ -101,20 +101,34 @@ export default class Event<T = any, E extends keyof T = keyof T, D extends T[E] 
 	 */
 	public remove(): void {
 		if (!this || !this.context.events || !this._name || !this.context.events[this._name]) return;
+
+		// Remove from events map
 		this.context.events[this._name].delete(this);
 		if (this.context.events[this._name].size === 0) {
 			delete this.context.events[this._name];
 		}
-		const event = this.context.listeners.get(this.handlers.callback!);
-		if (event && event.handlers.forks) {
-			event.handlers.forks.forEach((event) => event !== this ? event.remove() : null);
+
+		// Get the parent event
+		const parentEvent = this.context.listeners.get(this.handlers.callback!);
+		
+		// If this is a fork, remove it from parent's forks
+		if (parentEvent && parentEvent.handlers.forks) {
+			const forkIndex = parentEvent.handlers.forks.indexOf(this);
+			if (forkIndex !== -1) {
+				parentEvent.handlers.forks.splice(forkIndex, 1);
+			}
 		}
+
+		// Remove from listeners map
 		this.context.listeners.delete(this.handlers.callback!);
 		
+		// Clean up if not a stack
 		if (!this.isStack) {
 			this._name = undefined;
 			this.handlers.callback = undefined;
 		}
+
+		// Call remove handlers
 		for (let i = 0; i < this.handlers.remove.length; i++) {
 			this.handlers.remove[i]();
 		}
