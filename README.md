@@ -118,7 +118,7 @@ The `EventEmitter.Stack` class provides a way to manage a stack of event listene
 #### Constructor
 
 ```typescript
-new EventEmitter.Stack<T = any>(listeners?: Event<T>[])
+new EventEmitter.Stack<T>(listeners?: Event<T>[])
 ```
 
 - `T`: Type parameter for event payload types (optional)
