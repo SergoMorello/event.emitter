@@ -51,7 +51,7 @@ listener.remove();
 #### Constructor
 
 ```typescript
-new EventEmitter<T>(isGlobal?: boolean | string)
+new EventEmitter<T = any>(isGlobal?: boolean | string)
 ```
 
 - `T`: Type parameter for event payload types (optional)
@@ -111,6 +111,54 @@ EventEmitter.removeListener(handler: Function): void
 EventEmitter.removeAllListeners(): void
 ```
 
+### Event Class API
+
+The `Event` class represents a single event listener with its associated handlers and metadata.
+
+#### Properties
+
+```typescript
+readonly isStack: boolean
+```
+Indicates whether this event is part of a stack.
+
+```typescript
+get name(): string | undefined
+```
+Returns the name of the event.
+
+#### Methods
+
+```typescript
+emit(data: D): void
+```
+Emits the event with the specified data.
+
+```typescript
+hasHandler(handler: EventCallback<D>): boolean
+```
+Checks if the event has the specified handler.
+
+```typescript
+count(): number
+```
+Returns the number of listeners for this event.
+
+```typescript
+remove(): void
+```
+Removes the event listener and cleans up associated resources.
+
+```typescript
+onEmit(handlerEmit: () => void): void
+```
+Adds a handler to be called when the event is emitted.
+
+```typescript
+onRemove(handlerRemove: () => void): void
+```
+Adds a handler to be called when the event is removed.
+
 ### Event Stack
 
 The `EventEmitter.Stack` class provides a way to manage a stack of event listeners. It's useful when you need to handle multiple events in a specific order or maintain a collection of related event listeners.
@@ -118,7 +166,7 @@ The `EventEmitter.Stack` class provides a way to manage a stack of event listene
 #### Constructor
 
 ```typescript
-new EventEmitter.Stack<T>(listeners?: Event<T>[])
+new EventEmitter.Stack<T = any>(listeners?: Event<T>[])
 ```
 
 - `T`: Type parameter for event payload types (optional)
