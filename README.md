@@ -51,7 +51,7 @@ listener.remove();
 #### Constructor
 
 ```typescript
-new EventEmitter<T = any>(isGlobal?: boolean | string)
+new EventEmitter<T>(isGlobal?: boolean | string)
 ```
 
 - `T`: Type parameter for event payload types (optional)
@@ -166,7 +166,7 @@ The `EventEmitter.Stack` class provides a way to manage a stack of event listene
 #### Constructor
 
 ```typescript
-new EventEmitter.Stack<T = any>(listeners?: Event<T>[])
+new EventEmitter.Stack<T>(listeners?: Event<T>[])
 ```
 
 - `T`: Type parameter for event payload types (optional)
