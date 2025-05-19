@@ -6,6 +6,15 @@
 
 A lightweight, type-safe event emitter implementation for TypeScript and JavaScript applications. This package provides a simple yet powerful way to handle events in your application with support for both isolated and global event handling.
 
+## Quick Links to Framework Examples
+
+- [React Example](#react-example)
+- [Vue 3 Example](#vue-3-example)
+- [Angular Example](#angular-example)
+- [React with Event Stack](#react-example-with-event-stack)
+- [Vue 3 with Event Stack](#vue-3-example-with-event-stack)
+- [Angular with Event Stack](#angular-example-with-event-stack)
+
 ## Features
 
 - 🚀 Type-safe event handling with TypeScript
@@ -455,7 +464,6 @@ events.addListener('register', (user) => {
 });
 ```
 
-```js
 events.emit('login', {
 	id: 1,
 	name: 'user',
@@ -467,3 +475,370 @@ events.emit('register', {
 	email: 'new_user@gmail.com'
 });
 ```
+
+## Usage in Modern Frameworks
+
+### React Example
+
+```typescript
+// store/eventStore.ts
+import EventEmitter from 'easy-event-emitter';
+
+// Create a global event emitter for the application
+export const eventEmitter = new EventEmitter();
+
+// Define event types
+export interface UserEvent {
+  id: number;
+  name: string;
+}
+
+// React Component Example
+import React, { useEffect } from 'react';
+import { eventEmitter, UserEvent } from './store/eventStore';
+
+const UserProfile: React.FC = () => {
+  useEffect(() => {
+    // Add event listener when component mounts
+    const listener = eventEmitter.addListener('userUpdate', (user: UserEvent) => {
+      console.log('User updated:', user);
+      // Update component state or trigger re-render
+    });
+
+    // Clean up listener when component unmounts
+    return () => listener.remove();
+  }, []);
+
+  const handleUpdateUser = () => {
+    // Emit event when user data is updated
+    eventEmitter.emit('userUpdate', { id: 1, name: 'John Doe' });
+  };
+
+  return (
+    <div>
+      <button onClick={handleUpdateUser}>Update User</button>
+    </div>
+  );
+};
+
+export default UserProfile;
+```
+
+### Vue 3 Example
+
+```typescript
+// store/eventStore.ts
+import EventEmitter from 'easy-event-emitter';
+
+export const eventEmitter = new EventEmitter();
+
+// Vue Component Example
+import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { eventEmitter } from './store/eventStore';
+
+export default defineComponent({
+  setup() {
+    let listener: any;
+
+    onMounted(() => {
+      // Add event listener when component is mounted
+      listener = eventEmitter.addListener('dataUpdate', (data) => {
+        console.log('Data updated:', data);
+        // Update component state
+      });
+    });
+
+    onUnmounted(() => {
+      // Clean up listener when component is unmounted
+      if (listener) {
+        listener.remove();
+      }
+    });
+
+    const updateData = () => {
+      eventEmitter.emit('dataUpdate', { value: 'new data' });
+    };
+
+    return {
+      updateData
+    };
+  }
+});
+```
+
+### Angular Example
+
+```typescript
+// services/event.service.ts
+import { Injectable } from '@angular/core';
+import EventEmitter from 'easy-event-emitter';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EventService {
+  private eventEmitter = new EventEmitter();
+
+  emitEvent(eventName: string, data: any) {
+    this.eventEmitter.emit(eventName, data);
+  }
+
+  addListener(eventName: string, callback: (data: any) => void) {
+    return this.eventEmitter.addListener(eventName, callback);
+  }
+}
+
+// component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { EventService } from './services/event.service';
+
+@Component({
+  selector: 'app-example',
+  template: `
+    <button (click)="updateData()">Update Data</button>
+  `
+})
+export class ExampleComponent implements OnInit, OnDestroy {
+  private listener: any;
+
+  constructor(private eventService: EventService) {}
+
+  ngOnInit() {
+    // Add event listener when component initializes
+    this.listener = this.eventService.addListener('dataUpdate', (data) => {
+      console.log('Data updated:', data);
+      // Update component state
+    });
+  }
+
+  ngOnDestroy() {
+    // Clean up listener when component is destroyed
+    if (this.listener) {
+      this.listener.remove();
+    }
+  }
+
+  updateData() {
+    this.eventService.emitEvent('dataUpdate', { value: 'new data' });
+  }
+}
+```
+
+These examples demonstrate how to integrate the EventEmitter with modern frameworks while following their best practices and lifecycle management patterns. The EventEmitter can be used to create a centralized event system in your application, making it easy to communicate between different components and services.
+
+### Using EventEmitter.Stack in Modern Frameworks
+
+#### React Example with Event Stack
+
+```typescript
+// store/eventStore.ts
+import EventEmitter from 'easy-event-emitter';
+
+export const eventEmitter = new EventEmitter();
+
+// Define event types
+export interface UserEvents {
+  profileUpdate: { id: number; name: string };
+  settingsUpdate: { theme: string; notifications: boolean };
+  statusUpdate: { online: boolean };
+}
+
+// React Component Example with Stack
+import React, { useEffect } from 'react';
+import { eventEmitter, UserEvents } from './store/eventStore';
+
+const UserDashboard: React.FC = () => {
+  useEffect(() => {
+    // Create stack inside useEffect
+    const stack = new EventEmitter.Stack();
+
+    // Create and add listeners to the stack
+    stack.push(
+      eventEmitter.addListener('profileUpdate', (data) => {
+        console.log('Profile updated:', data);
+      })
+    );
+
+    stack.push(
+      eventEmitter.addListener('settingsUpdate', (data) => {
+        console.log('Settings updated:', data);
+      })
+    );
+
+    stack.push(
+      eventEmitter.addListener('statusUpdate', (data) => {
+        console.log('Status updated:', data);
+      })
+    );
+
+    // Clean up stack when component unmounts
+    return () => stack.remove();
+  }, []);
+
+  const handleUpdates = () => {
+    // Emit multiple events
+    eventEmitter.emit('profileUpdate', { id: 1, name: 'John' });
+    eventEmitter.emit('settingsUpdate', { theme: 'dark', notifications: true });
+    eventEmitter.emit('statusUpdate', { online: true });
+  };
+
+  return (
+    <div>
+      <button onClick={handleUpdates}>Update All</button>
+    </div>
+  );
+};
+
+export default UserDashboard;
+```
+
+#### Vue 3 Example with Event Stack
+
+```typescript
+// store/eventStore.ts
+import EventEmitter from 'easy-event-emitter';
+
+export const eventEmitter = new EventEmitter();
+
+// Vue Component Example with Stack
+import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { eventEmitter } from './store/eventStore';
+
+export default defineComponent({
+  setup() {
+    let stack: EventEmitter.Stack;
+
+    onMounted(() => {
+      // Create stack inside onMounted
+      stack = new EventEmitter.Stack();
+
+      // Add listeners to the stack
+      stack.push(
+        eventEmitter.addListener('dataUpdate', (data) => {
+          console.log('Data updated:', data);
+        })
+      );
+
+      stack.push(
+        eventEmitter.addListener('configUpdate', (config) => {
+          console.log('Config updated:', config);
+        })
+      );
+
+      stack.push(
+        eventEmitter.addListener('stateUpdate', (state) => {
+          console.log('State updated:', state);
+        })
+      );
+    });
+
+    onUnmounted(() => {
+      // Clean up stack when component is unmounted
+      if (stack) {
+        stack.remove();
+      }
+    });
+
+    const updateAll = () => {
+      // Emit multiple events
+      eventEmitter.emit('dataUpdate', { value: 'new data' });
+      eventEmitter.emit('configUpdate', { setting: 'new setting' });
+      eventEmitter.emit('stateUpdate', { status: 'active' });
+    };
+
+    return {
+      updateAll
+    };
+  }
+});
+```
+
+#### Angular Example with Event Stack
+
+```typescript
+// services/event.service.ts
+import { Injectable } from '@angular/core';
+import EventEmitter from 'easy-event-emitter';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EventService {
+  private eventEmitter = new EventEmitter();
+
+  emitEvent(eventName: string, data: any) {
+    this.eventEmitter.emit(eventName, data);
+  }
+
+  addListener(eventName: string, callback: (data: any) => void) {
+    return this.eventEmitter.addListener(eventName, callback);
+  }
+}
+
+// component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { EventService } from './services/event.service';
+
+@Component({
+  selector: 'app-dashboard',
+  template: `
+    <button (click)="updateAll()">Update All</button>
+  `
+})
+export class DashboardComponent implements OnInit, OnDestroy {
+  private stack: EventEmitter.Stack;
+
+  constructor(private eventService: EventService) {}
+
+  ngOnInit() {
+    // Create stack inside ngOnInit
+    this.stack = new EventEmitter.Stack();
+
+    // Add listeners to the stack
+    this.stack.push(
+      this.eventService.addListener('userUpdate', (data) => {
+        console.log('User updated:', data);
+      })
+    );
+
+    this.stack.push(
+      this.eventService.addListener('preferencesUpdate', (data) => {
+        console.log('Preferences updated:', data);
+      })
+    );
+
+    this.stack.push(
+      this.eventService.addListener('activityUpdate', (data) => {
+        console.log('Activity updated:', data);
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up stack when component is destroyed
+    if (this.stack) {
+      this.stack.remove();
+    }
+  }
+
+  updateAll() {
+    // Emit multiple events
+    this.eventService.emitEvent('userUpdate', { id: 1, name: 'John' });
+    this.eventService.emitEvent('preferencesUpdate', { theme: 'dark' });
+    this.eventService.emitEvent('activityUpdate', { status: 'active' });
+  }
+}
+```
+
+These examples demonstrate the correct usage of EventEmitter.Stack in modern frameworks, where:
+
+1. The stack is created within the component's lifecycle (useEffect, onMounted, ngOnInit)
+2. Event listeners are added to the stack immediately after creation
+3. The stack is cleaned up when the component is destroyed
+4. The stack is scoped to the component instance
+
+This approach ensures that:
+- Event listeners are properly managed within the component's lifecycle
+- Memory leaks are prevented by cleaning up the stack
+- The stack is isolated to the specific component instance
+- Event handling is more organized and maintainable
