@@ -435,39 +435,6 @@ type TEvents = {
 const events = new EventEmitter<TEvents>();
 ```
 
-#### Use
-
-```js
-events.addListener('login', (user) => {
-	// user: {
-	// 	id: 1,
-	// 	name: 'user',
-	// 	email: 'user@gmail.com'
-	// }
-});
-
-//...
-
-events.addListener('register', (user) => {
-	// user: {
-	// 	name: 'new user',
-	// 	email: 'new_user@gmail.com'
-	// }
-});
-```
-
-events.emit('login', {
-	id: 1,
-	name: 'user',
-	email: 'user@gmail.com'
-});
-
-events.emit('register', {
-	name: 'new user',
-	email: 'new_user@gmail.com'
-});
-```
-
 ## Usage in Modern Frameworks
 
 ### React Example
