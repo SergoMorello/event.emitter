@@ -18,10 +18,21 @@
     "url": "git+https://github.com/SergoMorello/event.emitter.git"
   },
   "keywords": [
-    "js",
-    "EventEmitter",
+    "event-emitter",
+    "typescript",
+    "javascript",
     "events",
-    "emit"
+    "event-handling",
+    "pubsub",
+    "event-driven",
+    "typescript-library",
+    "javascript-library",
+    "nodejs",
+    "browser",
+    "react",
+    "vue",
+    "angular",
+    "event-system"
   ],
   "author": "Sergey Serov",
   "license": "MIT",

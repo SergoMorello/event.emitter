@@ -255,14 +255,6 @@ type EventCallback<T> = (data: T) => void;
 
 // Event listener interface
 interface EventListener<T = any>
-
-// Event handlers type
-type EventHandlers<D> = {
-	callback?: EventCallback<D>;
-	forks?: Event[];
-	emit: (() => void)[];
-	remove: (() => void)[];
-};
 ```
 
 ## Usage Examples
