@@ -26,9 +26,11 @@ const config: Configuration = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
 	clean: true,
-	library: 'EventEmitter',
-	libraryTarget: 'umd',
-	auxiliaryComment: 'Easy Event Emitter',
+	library: {
+	  name: 'EventEmitter',
+	  type: 'umd',
+	  export: 'default'
+	},
 	globalObject: 'this'
   }
 };
