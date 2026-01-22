@@ -132,3 +132,15 @@ test('events count', () => {
 	expect(events.listenerCount('test3')).toBe(0);
 	expect(events.listenerCount()).toBe(0);
 });
+
+test('emit once event', (done) => {
+	const events = new EventEmitter();
+
+	const listener = events.once('__test', (e) => {
+		expect(e).toBe('ok');
+		done();
+	});
+
+	events.emit('__test', 'ok');
+	expect(listener.name).toBeUndefined();
+});

@@ -13,8 +13,6 @@ export default abstract class Events<T> extends Core<T> {
 		[Events.globalName]: {}
 	};
 
-	
-
 	/**
 	 * Event constructor
 	 * @param {string|boolean|undefined} group Events group name
@@ -57,6 +55,48 @@ export default abstract class Events<T> extends Core<T> {
 	 */
 	public addListener<DATA extends T[EVENT], EVENT extends keyof T = keyof T>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
 		return new Event<T, EVENT, DATA>(event, callback, this);
+	}
+
+	/**
+	 * Subscribes to an event and registers a persistent listener.
+	 *
+	 * The callback will be invoked every time the specified event is emitted
+	 * until the returned listener is explicitly removed.
+	 *
+	 * @typeParam EVENT - Event name from the event map.
+	 * @typeParam DATA - Payload type associated with the event.
+	 *
+	 * @param event - The event name to subscribe to.
+	 * @param callback - Function invoked when the event is emitted.
+	 *
+	 * @returns An {@link Event} instance that can be used to manage
+	 *          the listener lifecycle (e.g. remove the listener).
+	 */
+	public on<DATA extends T[EVENT], EVENT extends keyof T = keyof T>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
+		return this.addListener(event, callback);
+	}
+
+	/**
+	 * Subscribes to an event and registers a one-time listener.
+	 *
+	 * The callback will be invoked only once — on the next emission
+	 * of the specified event — and the listener will be automatically
+	 * removed immediately after invocation.
+	 *
+	 * @typeParam EVENT - Event name from the event map.
+	 * @typeParam DATA - Payload type associated with the event.
+	 *
+	 * @param event - The event name to subscribe to.
+	 * @param callback - Function invoked once when the event is emitted.
+	 *
+	 * @returns An {@link Event} instance representing the one-time listener.
+	 */
+	public once<DATA extends T[EVENT], EVENT extends keyof T = keyof T>(event: EVENT, callback: EventCallback<DATA>): Event<T, EVENT, DATA> {
+		const currentEvent = new Event<T, EVENT, DATA>(event, (e) => {
+			callback(e);
+			currentEvent.remove();
+		}, this);
+		return currentEvent;
 	}
 
 	public listenerCount<EVENT extends keyof T>(event?: EVENT) {

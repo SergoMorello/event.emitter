@@ -2,7 +2,7 @@ import Event from "./Event";
 import Events from "./index";
 
 class Stack<T = any> extends Event<T> {
-	constructor(listeners: Event<T>[] = []) {
+	constructor(listeners: Event<T, any, any>[] = []) {
 		const stackEmitter = new Events<T>();
 		super('__stack' as keyof T, (data) => {
 			this.listeners.forEach((listener) => !listener.isStack ? listener.emit(data) : null);

@@ -61,3 +61,26 @@ test('Remove all listeners', (done) => {
 	
 	if (result.length === 100) done();
 });
+
+test('Remove stack', () => {
+	const events = new EventEmitter();
+
+	const stack = new EventEmitter.Stack([
+		events.addListener('__test1', () => {}),
+		events.addListener('__test2', () => {})
+	]);
+
+	const testHandler = (e: string) => {
+		expect(e).not.toBe('not-ok');
+	};
+
+	const listener = events.addListener('__test3', testHandler);
+	listener.onRemove(() => {
+		stack.remove();
+	})
+	expect(listener.name).toBe('__test3');
+	events.removeListener(testHandler);
+	expect(listener.name).toBeUndefined();
+	listener.remove();
+	listener.emit('not-ok');
+});
